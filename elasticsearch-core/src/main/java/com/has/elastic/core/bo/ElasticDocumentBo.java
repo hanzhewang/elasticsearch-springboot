@@ -41,6 +41,8 @@ public class ElasticDocumentBo {
      */
     private String nested;
 
+    private String id;
+
     /**
      * Elasticsearch document uuid
      * 文档：UUID键

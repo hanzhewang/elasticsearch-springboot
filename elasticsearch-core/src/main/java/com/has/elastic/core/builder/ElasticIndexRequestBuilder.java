@@ -1,11 +1,12 @@
 package com.has.elastic.core.builder;
 
-import com.has.elastic.core.model.IndexModel;
+import co.elastic.clients.elasticsearch.core.IndexRequest;
+import com.has.elastic.core.adapter.ElasticAdapterFactory;
+import com.has.elastic.core.bo.ElasticDocumentBo;
+import com.has.elastic.core.paser.DocumentOperationParser;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.ElasticsearchException;
-import org.elasticsearch.action.index.IndexRequestBuilder;
-import org.elasticsearch.common.xcontent.XContentType;
-import sun.jvm.hotspot.asm.Register;
+
+import java.io.Serializable;
 
 /**
  * <p>com.has.elastic.core.builder</p>
@@ -18,43 +19,46 @@ import sun.jvm.hotspot.asm.Register;
 public class ElasticIndexRequestBuilder {
 
     /**
-     * 注册解析器
+     * Elasticsearch document parser
+     * 对象解析文档操作信息
+     */
+    private DocumentOperationParser documentOperationParser;
+
+    /**
+     * register object parser document info
+     * 注册对象解析器, 对象解析成Elasticsearch文档信息
      *
+     * @param parser
      * @return
      */
-    public ElasticIndexRequestBuilder registerPaster() {
+    public ElasticIndexRequestBuilder registerParser(DocumentOperationParser parser) {
+        this.documentOperationParser = parser;
         return this;
     }
 
     /**
-     * 注册解析工厂(注解)
+     * add object parser factory
+     * 注册对象解析器适配工厂, 对象解析成Elasticsearch文档信息
      *
+     * @param factory
      * @return
      */
-    public ElasticIndexRequestBuilder registerPasterFactory() {
+    public ElasticIndexRequestBuilder addParserComponents(ElasticAdapterFactory factory) {
+        this.documentOperationParser.addElasticAdapterFactory(factory);
         return this;
     }
 
     /**
+     * create Elasticsearch insert or update document request object
+     * 创建删除请求对象
+     *
      * @return
      */
-    public IndexRequestBuilder create() {
-        IndexModel model = this.parserMappingInfo(target);
-        getLog().error("EsWriteService.getIndexRequestBuilder#model:{},object:{}", JSON.toJSONString(model), JSON.toJSONString(target));
-        Object requestParameter = null;
-        if (model.isNested()) {
-            throw new ElasticsearchException("");
-        }
-        if (model.isJoin()) {
-            requestParameter = model.getWriteParameterByJoin(target);
-        } else {
-            requestParameter = target;
-        }
-        String json = getJsonAdapter().toJsonString(requestParameter);
-        String uuid = model.getFieldValues().get(model.getUuid()).toString();
-        IndexRequestBuilder indexRequest = getTransportClient()
-                .prepareIndex(model.getIndex(), model.getType(), uuid)
-                .setSource(json, XContentType.JSON);
-        return null;
+    public <T extends Serializable> IndexRequest<T> create(T target) {
+        ElasticDocumentBo bo = documentOperationParser.parser(target);
+        IndexRequest.Builder<T> builder = new IndexRequest.Builder();
+        builder.index(bo.getIndex()).type(bo.getType()).id(bo.getId());
+        builder.document(target);
+        return builder.build();
     }
 }
