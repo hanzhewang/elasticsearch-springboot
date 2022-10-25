@@ -43,7 +43,10 @@ public class ElasticConditionAdapter implements ElasticAdapter<ElasticCondition,
         bo.setCondition(condition.condition());
         bo.setBool(condition.bool());
         bo.setBoolGroup(condition.boolGroup());
+        bo.setBoost(condition.boost());
+        bo.setCaseInsensitive(condition.caseInsensitive());
         bo.setValue(value);
         return bo;
     }
+
 }

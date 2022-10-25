@@ -51,6 +51,11 @@ public class ElasticConditionBo implements Serializable {
     private QueryBoolType bool;
 
     /**
+     * 连接
+     */
+    private QueryBoolType boosting;
+
+    /**
      * 分组
      */
     private String boolGroup;
@@ -59,4 +64,15 @@ public class ElasticConditionBo implements Serializable {
      * 属性值
      */
     private Object value;
+
+    /**
+     * 开启权重
+     */
+    private Float boost;
+
+    /**
+     * 不区分大小写
+     */
+    private Boolean caseInsensitive;
+
 }

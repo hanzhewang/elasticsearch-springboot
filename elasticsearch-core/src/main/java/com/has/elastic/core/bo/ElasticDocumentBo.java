@@ -1,5 +1,6 @@
 package com.has.elastic.core.bo;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.annotations.Since;
 import com.has.elastic.base.annotation.search.ElasticSort;
@@ -55,6 +56,8 @@ public class ElasticDocumentBo {
      */
     private ElasticVersionBo version;
 
+    private List<ElasticConditionBo> conditions = Lists.newCopyOnWriteArrayList();
+
     /**
      * Elasticsearch document query condition
      * 文档：查询条件
@@ -65,5 +68,5 @@ public class ElasticDocumentBo {
      * Elasticsearch document query sort
      * 文档：查询排序
      */
-    private List<ElasticSort> sorts;
+    private List<ElasticSortBo> sorts;
 }

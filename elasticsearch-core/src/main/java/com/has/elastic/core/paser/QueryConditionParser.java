@@ -1,38 +1,32 @@
-package com.has.elastic.core.utils.parser.search;
+package com.has.elastic.core.paser;
 
-import com.alibaba.fastjson.JSON;
+import co.elastic.clients.elasticsearch._types.query_dsl.Query;
+import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
+import co.elastic.clients.elasticsearch.core.search.ScoreMode;
 import com.google.common.base.Function;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.jd.kos.commons.elasticsearch.annotation.search.QueryParameter;
-import com.jd.kos.commons.elasticsearch.enums.mapping.ObjectType;
-import com.jd.kos.commons.elasticsearch.enums.search.QueryParameterType;
-import com.jd.kos.commons.elasticsearch.model.dto.QueryParserDto;
-import com.jd.kos.commons.elasticsearch.utils.parser.mapping.BaseParser;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.lucene.search.join.ScoreMode;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.join.query.JoinQueryBuilders;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**
- * <p>The elasticsearch search parameter annotation parser</p>
+ * <p>com.has.elastic.core.paser</p>
  *
  * @author wanghanzhe
- * @version 1.2.1
- * @date 2018.6.10
- * @since JDK1.8 and Elasticsearch 6.3
+ * @version 1.0.0
+ * @date 2022/10/17
  */
-public interface QueryParameterParser extends BaseParser {
+public class QueryConditionParser {
+
+    public Query parser(Object target) {
+
+    }
 
     /**
      * parser query parameter object
@@ -40,7 +34,8 @@ public interface QueryParameterParser extends BaseParser {
      * @param target
      * @return
      */
-    default QueryBuilder parserQuery(Object target) {
+    public Query parser(Object target) {
+        QueryBuilders queryBuilders = QueryBuilders.simpleQueryString()
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         // reflect object field value array
         Map<String, Object> fieldsValue = getReflectAdapter().getFieldsValueMap(target);
@@ -163,6 +158,8 @@ public interface QueryParameterParser extends BaseParser {
             return boolBuilder;
         }
     }
+
+
 
     /**
      * parser query condition by type
@@ -356,5 +353,4 @@ public interface QueryParameterParser extends BaseParser {
         parserDtos.add(value);
         map.put(key, parserDtos);
     }
-
 }

@@ -1,5 +1,6 @@
 package com.has.elastic.core.bo;
 
+import com.has.elastic.base.enums.search.SortRule;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,5 +36,10 @@ public class ElasticSortBo implements Serializable {
     /**
      * 属性排序
      */
-    private String orderBy;
+    private SortRule sortRule;
+
+    /**
+     * 属性排序
+     */
+    private Integer sort;
 }

@@ -60,4 +60,18 @@ public @interface ElasticCondition {
      */
     String nested() default "";
 
+    /**
+     * 开启权重
+     *
+     * @return
+     */
+    float boost() default 2.0F;
+
+    /**
+     * 不区分大小写
+     *
+     * @return
+     */
+    boolean caseInsensitive() default false;
+
 }
